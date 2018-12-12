@@ -1,3 +1,4 @@
+import logging
 from typing import Dict, List, Optional, Tuple
 
 import gevent
@@ -11,6 +12,8 @@ from networkx.exception import NetworkXNoPath
 from pathfinder.config import API_DEFAULT_PORT, API_HOST, API_PATH
 from pathfinder.pathfinding_service import PathfindingService
 from raiden_libs.types import Address
+
+log = logging.getLogger(__name__)
 
 
 class PathfinderResource(Resource):
@@ -127,3 +130,5 @@ class ServiceApi:
     def run(self, port: int = API_DEFAULT_PORT):
         self.rest_server = WSGIServer((API_HOST, port), self.flask_app)
         self.server_greenlet = gevent.spawn(self.rest_server.serve_forever)
+
+        log.info(f'Running endpoint at {API_HOST}:{port}')
